@@ -14,7 +14,7 @@ function parseUrlQuery(url) {
     return {
       ...pre,
       [arr[0]]: arr[1]
-    }
+    };
   }, {});
 }
 /**
