@@ -1,7 +1,7 @@
 /**
  * Created by Escape on 16/7/8.
  */
-
+import _ from 'lodash';
 /**
  * @description 格式化url参数 parseUrlQuery
  * @param {url} http://google.com/?id=5&foo=bar
@@ -30,9 +30,23 @@ function serializeObject(obj, separator = '&') {
     `${key}=${obj[key]}`
   ], []).join(separator);
 }
-
+/**
+ * @description 数组排序
+ * @param {arr1} 需要排序数组
+ * @param {arr2} 需要排序数组
+ * @param {fn} 排序条件 func
+ * @return []
+ */
+ function arrSort(arr1, ...rest) {
+   const [arr, fn] = rest;
+   if (_.isFunction(arr)) {
+     return arr1.sort(arr);
+   }
+   return fn ? arr1.sort(fn) : arr1.sort((a, b) => {arr.indexOf(a.id) - arr.indexOf(b.id)});
+ }
 const utils = {
   parseUrlQuery: parseUrlQuery,
   serializeObject: serializeObject,
+  arrSort: arrSort
 }
 export default utils;
