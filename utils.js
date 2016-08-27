@@ -44,9 +44,41 @@ function serializeObject(obj, separator = '&') {
    }
    return fn ? arr1.sort(fn) : arr1.sort((a, b) => {arr.indexOf(a.id) - arr.indexOf(b.id)});
  }
+ /**
+  * @description 数组快速排序
+  * @param {arr1} 需要排序数组
+  * @return 从小到大排序的数组
+  */
+ function quicksort(arr) {
+  if (arr.length <= 1) return arr;
+  var pivotIndex = Math.floor(arr.length / 2);
+  var pivot = arr.splice(pivotIndex, 1)[0];
+  var left = [], right = [];
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] < pivot) {
+      left.push(arr[i]);
+    } else {
+      right.push(arr[i]);
+    }
+  }
+  return quicksort(left).concat([pivot], quicksort(right));
+}
+/**
+ * @description 数组去重
+ * @param {arr}
+ * @return 数组
+ */
+ function unique(arr) {
+   var newArr = [];
+   for (var i = 0; i < arr.length; i++) {
+     if (newArr.indexOf(arr[i]) == -1) newArr.push(arr[i]);
+   }
+   return newArr;
+ }
 const utils = {
   parseUrlQuery: parseUrlQuery,
   serializeObject: serializeObject,
-  arrSort: arrSort
+  arrSort: arrSort,
+  quicksort: quicksort
 }
 export default utils;
