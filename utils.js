@@ -51,16 +51,16 @@ function serializeObject(obj, separator = '&') {
   */
  function quicksort(arr) {
   if (arr.length <= 1) return arr;
-  var pivotIndex = Math.floor(arr.length / 2);
-  var pivot = arr.splice(pivotIndex, 1)[0];
-  var left = [], right = [];
-  for (var i = 0; i < arr.length; i++) {
-    if (arr[i] < pivot) {
-      left.push(arr[i]);
+  const pivotIndex = Math.floor(arr.length / 2);
+  const pivot = arr.splice(pivotIndex, 1)[0];
+  const left = [], right = [];
+  arr.forEach(v => {
+    if (v < pivot) {
+      left.push(v);
     } else {
-      right.push(arr[i]);
+      right.push(v);
     }
-  }
+  });
   return quicksort(left).concat([pivot], quicksort(right));
 }
 /**
@@ -69,16 +69,62 @@ function serializeObject(obj, separator = '&') {
  * @return 数组
  */
  function unique(arr) {
-   var newArr = [];
-   for (var i = 0; i < arr.length; i++) {
-     if (newArr.indexOf(arr[i]) == -1) newArr.push(arr[i]);
-   }
+   const newArr = [];
+   arr.forEach(v => {
+     if (newArr.indexOf(v) == -1) newArr.push(v]);
+   });
    return newArr;
  }
+ /**
+  * @description 观察者模式事件
+  * @param {on, emit, off, once}
+  * @return
+  */
+  const Event = ((function() {
+  let handlers = {};
+  function on(evt, func) {
+    handlers[evt] = handlers[evt] || [];
+    handlers[evt].push(func);
+  }
+  function once(evt, func) {
+    handlers[evt] = [];
+    handlers[evt].push(func);
+  }
+  function off(evt, func) {
+    const handler = handlers[evt];
+    if (handler) {
+      for (let i = 0; i < handler.length; i++) {
+        if (handler[i] === func) {
+          handler.splice(i, 1);
+          return;
+        }
+      }
+    }
+  }
+  function emit(evt, arg) {
+    if (handlers[evt]) {
+      for (let i = 0; i < handlers[evt].length; i++) {
+        handlers[evt][i](arg);
+      }
+    }
+  }
+  function init() {
+    handlers = {};
+  }
+  return {
+    on,
+    once,
+    off,
+    emit,
+    init,
+  };
+})());
+// const unique_Es6 = arr => arr.filter((v, i) => arr.indexOf(v) === i);
 const utils = {
   parseUrlQuery: parseUrlQuery,
   serializeObject: serializeObject,
   arrSort: arrSort,
-  quicksort: quicksort
+  quicksort: quicksort,
+  Event: Event
 }
 export default utils;
