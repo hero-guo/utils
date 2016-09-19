@@ -81,50 +81,89 @@ function serializeObject(obj, separator = '&') {
   * @return
   */
   const Event = ((function() {
-  let handlers = {};
-  function on(evt, func) {
-    handlers[evt] = handlers[evt] || [];
-    handlers[evt].push(func);
-  }
-  function once(evt, func) {
-    handlers[evt] = [];
-    handlers[evt].push(func);
-  }
-  function off(evt, func) {
-    const handler = handlers[evt];
-    if (handler) {
-      for (let i = 0; i < handler.length; i++) {
-        if (handler[i] === func) {
-          handler.splice(i, 1);
-          return;
+    let handlers = {};
+    function on(evt, func) {
+      handlers[evt] = handlers[evt] || [];
+      handlers[evt].push(func);
+    }
+    function once(evt, func) {
+      handlers[evt] = [];
+      handlers[evt].push(func);
+    }
+    function off(evt, func) {
+      const handler = handlers[evt];
+      if (handler) {
+        for (let i = 0; i < handler.length; i++) {
+          if (handler[i] === func) {
+            handler.splice(i, 1);
+            return;
+          }
         }
       }
     }
-  }
-  function emit(evt, arg) {
-    if (handlers[evt]) {
-      for (let i = 0; i < handlers[evt].length; i++) {
-        handlers[evt][i](arg);
+    function emit(evt, arg) {
+      if (handlers[evt]) {
+        for (let i = 0; i < handlers[evt].length; i++) {
+          handlers[evt][i](arg);
+        }
       }
     }
-  }
-  function init() {
-    handlers = {};
-  }
-  return {
-    on,
-    once,
-    off,
-    emit,
-    init,
-  };
-})());
+    function init() {
+      handlers = {};
+    }
+    return {
+      on,
+      once,
+      off,
+      emit,
+      init,
+    };
+  })());
 // const unique_Es6 = arr => arr.filter((v, i) => arr.indexOf(v) === i);
+/**
+ * @description 图表数据排序
+ * @param data   arr
+ * @param rowOrCol bool true: 根据首行排序； false: 根据首列排序
+ * @return []
+ */
+function dataSort(data, rowOrCol) {
+  //当前仅对数据首行/列是数字时进行排序, 否则返回原数组
+  const xData = data[0].slice(1);
+  const yData = data.map(v => v[0]).slice(1);
+  const xAxisData = rowOrCol ? xData : yData;
+  const isNumeber = xAxisData.every((v) => !isNaN(v));
+  if (isNumeber) {
+    //序列数据取行时排序
+    const d = data.map(v => v.slice(1));
+    const xD = d.map(v => {
+      const newArr = []; //转换成对象
+      v.forEach((k, i) => {
+        newArr.push({[d[0][i]]: k});
+      });
+      return newArr;
+    })
+    .map(v => v.sort((a, b) => Object.keys(a) - Object.keys(b))) //根据第一行排序
+    .map((v, i) => {
+      //转回数组,并填充数据第一例
+      const arr = [data.map(k => k[0])[i]];
+      v.forEach((k) => {
+        arr.push(k[Object.keys(k)]);
+      });
+      return arr;
+    });
+    return rowOrCol ? xD : [ // true: 根据数据第一行排序; false: 根据数据第一列排序
+      data[0],
+      ...data.slice(1).sort((a, b) => Number(a[0]) - Number(b[0]))
+    ];
+  }
+  return data;
+}
 const utils = {
   parseUrlQuery: parseUrlQuery,
   serializeObject: serializeObject,
   arrSort: arrSort,
   quicksort: quicksort,
-  Event: Event
+  Event: Event,
+  dataSort: dataSort
 }
 export default utils;
