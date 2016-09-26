@@ -68,6 +68,16 @@ function serializeObject(obj, separator = '&') {
  * @param {arr}
  * @return 数组
  */
+function es6Unique(arr) {
+  const items = new Set(arr);
+  //return [...items]; return [...new Set(arr)];
+  return Array.from(items);
+}
+/**
+ * @description 数组去重
+ * @param {arr}
+ * @return 数组
+ */
  function unique(arr) {
    const newArr = [];
    arr.forEach(v => {
