@@ -168,12 +168,34 @@ function dataSort(data, rowOrCol) {
   }
   return data;
 }
+/**
+ * @description this 软绑定
+ * @param obj
+ * @return
+ */
+ function softBind(obj) {
+   if (!Function.prototype.softBind) {
+     Function.prototype.softBind = function (obj) {
+       var fn = this;
+       var curried = [].slice.call(arguments, 1);
+       var bound = function() {
+         return fn.apply(
+           (!this || this === (window || global)) ? obj : this,
+           curried.concat.apply(curried, arguments)
+         );
+       };
+       bound.prototype = Object.create(fn.prototype);
+       return bound;
+     }
+   }
+ }
 const utils = {
   parseUrlQuery: parseUrlQuery,
   serializeObject: serializeObject,
   arrSort: arrSort,
   quicksort: quicksort,
   Event: Event,
-  dataSort: dataSort
+  dataSort: dataSort,
+  softBind: softBind
 }
 export default utils;
