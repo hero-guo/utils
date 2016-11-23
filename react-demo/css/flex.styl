@@ -1,0 +1,27 @@
+// main
+.wrap
+  display flex
+  height 100%
+
+// modify
+.tb
+  flex-direction column
+.justify
+  justify-content space-between
+
+// child
+.auto
+  flex 1
+
+// style
+.wrap>div
+  overflow auto
+  //background-color white
+// 嵌套的时候会被覆盖，写在后面
+//div.wrap
+  //background-color #dadde2
+
+.wrap>div+div
+  margin 0 0 0 1px
+.tb>div+div
+  margin 1px 0 0 0
