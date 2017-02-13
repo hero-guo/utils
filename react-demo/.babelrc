@@ -1,9 +1,0 @@
-{
-  "presets": ["react", "es2015", "stage-0"],
-  "plugins": [
-    ["antd", {"style":"css"}],
-    "transform-runtime",
-    "add-module-exports",
-    "transform-decorators-legacy"
-  ]
-}
