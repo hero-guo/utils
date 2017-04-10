@@ -60,6 +60,7 @@ function es6Unique(arr) {
   const items = new Set(arr);
   return Array.from(items);
 }
+
 /**
  * @description 数组去重
  * @param {arr}
