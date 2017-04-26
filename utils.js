@@ -134,6 +134,24 @@ function es6Unique(arr) {
      }
    }
  }
+/**
+ * @description 找出字符串中第一个不重复项
+ * @param
+ * @return
+ */
+if (!String.prototype.findFirst) {
+  String.prototype.findFirst = function () {
+    var arr = Array.from(this), i = 0;
+    var newarr = arr.slice(0);
+    newarr.splice(0, 1);
+    while (newarr.includes(arr[i])) {
+      newarr.splice(i, 0, arr[i]);
+      i++;
+      newarr.splice(i, 1);
+    }
+    return arr[i];
+  }
+}
 const utils = {
   parseUrlQuery: parseUrlQuery,
   serializeObject: serializeObject,
