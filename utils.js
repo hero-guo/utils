@@ -152,11 +152,49 @@ if (!String.prototype.findFirst) {
     return arr[i];
   }
 }
+/**
+ * @description 将字节数转换成对应单位
+ * @param
+ *  b = 字节数
+ *  opts{
+ *   decimals: 2, // 保留小数位数
+ *   factor: 1024, // 转换基数
+ *   unti: 'GB' // 最大单位
+ *  }
+ * @return
+ */
+const defaults = {
+  decimals: 2,
+  factor: 1024,
+  unti: 'GB'
+};
+const unit = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
+function round(f, opts, i = 0) {
+  const {factor, decimals} = opts;
+  const value = f / factor;
+  const index = unit.findIndex(n => n === (opts.unti || 'GB'));
+  if (!~index) {
+    throw new Error('unti Error');
+  }
+  i++;
+  if (f % factor === f || i === -~index) {
+    const dec = 10 ** decimals;
+    const preValue = Math.floor(f * dec) / dec;
+    return `${preValue} ${unit[i - 1]}`;
+  }
+  return round(value, opts, i);
+}
+export function byte2any(b, opts) {
+  if (!b) return 0;
+  const option = Object.assign({}, defaults, opts);
+  return round(b, option);
+}
 const utils = {
   parseUrlQuery: parseUrlQuery,
   serializeObject: serializeObject,
   quicksort: quicksort,
   myEvent: myEvent,
-  softBind: softBind
+  softBind: softBind,
+  byte2any: byte2any
 }
 export default utils;
