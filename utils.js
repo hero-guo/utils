@@ -184,17 +184,59 @@ function round(f, opts, i = 0) {
   }
   return round(value, opts, i);
 }
-export function byte2any(b, opts) {
+function byte2any(b, opts) {
   if (!b) return 0;
   const option = Object.assign({}, defaults, opts);
   return round(b, option);
 }
+
+/**
+ * @description 函数防抖
+ * @param
+ *  fn,
+ *  delay
+ * @return
+ */
+function debounce(fn, delay = 160) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, delay);
+  }
+}
+/**
+ * @description 函数节流
+ * @param
+ *  fn,
+ *  delay
+ * @return
+ */
+function throttle(fn, delay = 160) {
+  let timer;
+  let start = +new Date();
+  return function (...args) {
+    const cur = +new Date();
+    clearTimeout(timer);
+    if (cur - start >= delay) {
+      fn.apply(this, args);
+      start = cur;
+    } else {
+      timer = setTimeout(() => {
+        fn.apply(this, args);
+      }, delay);
+    }
+  }
+}
 const utils = {
-  parseUrlQuery: parseUrlQuery,
-  serializeObject: serializeObject,
-  quicksort: quicksort,
-  myEvent: myEvent,
-  softBind: softBind,
-  byte2any: byte2any
+  parseUrlQuery,
+  serializeObject,
+  quicksort,
+  myEvent,
+  softBind,
+  byte2any,
+  throttle,
+  debounce
 }
 export default utils;
