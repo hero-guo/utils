@@ -229,6 +229,30 @@ function throttle(fn, delay = 160) {
     }
   }
 }
+/**
+ * @description 合并两个排序数组
+ * @param
+ * @return
+ */
+function mergeSort(a, b) {
+  var result = [], il = 0, ir = 0;
+  var al = a.length, bl = b.length;
+  
+  while (il < al && ir < bl) {
+    if (a[il] < b[ir]) {
+      result.push(a[il++]);
+    } else {
+      result.push(b[ir++]);
+    }
+  }
+  while (a[il]) {
+    result.push(a[il++]);
+  }
+  while (b[ir]) {
+    result.push(b[ir++]);
+  }
+  return result;
+}
 const utils = {
   parseUrlQuery,
   serializeObject,
