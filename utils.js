@@ -189,6 +189,95 @@ export function byte2any(b, opts) {
   const option = Object.assign({}, defaults, opts);
   return round(b, option);
 }
+/**
+ * @description Promise polyfill
+ */
+function Promise(executor) {
+  this.status = 'pending'
+  this.data = undefined
+  this.onResolvedCallback = []
+  this.onRejectedCallback = []
+
+  function resolve(value) {
+    if (this.status === 'pending') {
+      this.status = 'resolved'
+      this.data = value
+      this.onResolvedCallback.forEach(callback => callback(value))
+    }
+  }
+  function reject(value) {
+    if (this.status === 'pending') {
+      this.status = 'rejected'
+      this.data = value
+      this.onRejectedCallback.forEach(callback => callback(value))
+    }
+  }
+
+  try{
+    executor(resolve, reject)
+  } catch (e) {
+    reject(e)
+  }
+}
+Promise.prototype.then = function (onResolved, onRejected) {
+  onResolved = typeof onResolved === 'function' ? onResolved : v => v
+  onRejected = typeof onRejected === 'function' ? onRejected : e => e
+  if (this.status === 'pending') {
+    return new Promise(function (resolve, reject) {
+      this.onResolvedCallback.push(function(value) {
+        try {
+          var x = onResolved(this.data)
+          if (x instanceof Promise) {
+            x.then(resolve, reject)
+          }
+        } catch (e) {
+          reject(e)
+        }
+      })
+      this.onRejectedCallback.push(function(reason) {
+        try {
+          var x = onRejected(this.data)
+          if (x instanceof Promise) {
+            x.then(resolve, reject)
+          }
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+  }
+  if (this.status === 'resolved') {
+    return new Promise(function (resolve, reject) {
+      try {
+        var x = onResolved(this.data)
+        if (x instanceof Promise) {
+          x.then(resolve, reject)
+        } else {
+          resolve(x)
+        }
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+  if (this.status === 'rejected') {
+    return new Promise(function (resolve, reject) {
+      try {
+        var x = onRejected(this.data)
+        if (x instanceof Promise) {
+          x.then(resolve, reject)
+        } else {
+          reject(x)
+        }
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+}
+Promise.prototype.catch = function(onRejected) {
+  return this.then(null, onRejected)
+}
 const utils = {
   parseUrlQuery: parseUrlQuery,
   serializeObject: serializeObject,
