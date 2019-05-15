@@ -1,7 +1,7 @@
 /**
  * Created by neil on 16/7/8.
  */
-// import _ from 'lodash';
+// import _ from 'lodash'
 
 
 /**
@@ -10,14 +10,14 @@
  * @return {id: 5, foo: 'bar'}
  */
 function parseUrlQuery(url) {
-  if (url.indexOf('?') === -1) return {};
+  if (url.indexOf('?') === -1) return {}
   return url.split('?')[1].split('&').reduce((pre, value) => {
-    const arr = value.split('=');
+    const arr = value.split('=')
     return {
       ...pre,
       [arr[0]]: arr[1]
-    };
-  }, {});
+    }
+  }, {})
 }
 /**
  * @description 转换对象=>url参数 serializeObject
@@ -26,11 +26,11 @@ function parseUrlQuery(url) {
  * @return 'foo=bar&id=5'
  */
 function serializeObject(obj, separator = '&') {
-  if (typeof obj === 'string') return obj;
+  if (typeof obj === 'string') return obj
   return Object.keys(obj).reduce((pre, key) => [
     ...pre,
     `${key}=${obj[key]}`
-  ], []).join(separator);
+  ], []).join(separator)
 }
  /**
   * @description 数组快速排序
@@ -38,18 +38,18 @@ function serializeObject(obj, separator = '&') {
   * @return 从小到大排序的数组
   */
  function quicksort(arr) {
-  if (arr.length <= 1) return arr;
-  const pivotIndex = Math.floor(arr.length / 2);
-  const pivot = arr.splice(pivotIndex, 1)[0];
-  const left = [], right = [];
+  if (arr.length <= 1) return arr
+  const pivotIndex = Math.floor(arr.length / 2)
+  const pivot = arr.splice(pivotIndex, 1)[0]
+  const left = [], right = []
   arr.forEach(v => {
     if (v < pivot) {
-      left.push(v);
+      left.push(v)
     } else {
-      right.push(v);
+      right.push(v)
     }
-  });
-  return quicksort(left).concat([pivot], quicksort(right));
+  })
+  return quicksort(left).concat([pivot], quicksort(right))
 }
 /**
  * @description 数组去重
@@ -57,8 +57,8 @@ function serializeObject(obj, separator = '&') {
  * @return 数组
  */
 function es6Unique(arr) {
-  const items = new Set(arr);
-  return Array.from(items);
+  const items = new Set(arr)
+  return Array.from(items)
 }
 
 /**
@@ -67,11 +67,11 @@ function es6Unique(arr) {
  * @return 数组
  */
  function unique(arr) {
-   const newArr = [];
+   const newArr = []
    arr.forEach(v => {
-     if (newArr.indexOf(v) == -1) newArr.push(v);
-   });
-   return newArr;
+     if (newArr.indexOf(v) == -1) newArr.push(v)
+   })
+   return newArr
  }
  /**
   * @description 观察者模式事件
@@ -79,30 +79,30 @@ function es6Unique(arr) {
   * @return
   */
   const myEvent = ((function() {
-    let handlers = {};
+    let handlers = {}
     function on(evt, func) {
-      handlers[evt] = handlers[evt] || [];
-      handlers[evt].push(func);
+      handlers[evt] = handlers[evt] || []
+      handlers[evt].push(func)
     }
     function once(evt, func) {
-      handlers[evt] = [];
-      handlers[evt].push(func);
+      handlers[evt] = []
+      handlers[evt].push(func)
     }
     function off(evt, func) {
-      const handler = handlers[evt];
+      const handler = handlers[evt]
       if (handler) {
-        for (let i = 0; i < handler.length; i++) {
+        for (let i = 0 i < handler.length i++) {
           if (handler[i] === func) {
-            handler.splice(i, 1);
-            return;
+            handler.splice(i, 1)
+            return
           }
         }
       }
     }
     function emit(evt, arg) {
       if (handlers[evt]) {
-        for (let i = 0; i < handlers[evt].length; i++) {
-          handlers[evt][i](arg);
+        for (let i = 0 i < handlers[evt].length i++) {
+          handlers[evt][i](arg)
         }
       }
     }
@@ -111,8 +111,8 @@ function es6Unique(arr) {
       once,
       off,
       emit,
-    };
-  })());
+    }
+  })())
 /**
  * @description this 软绑定
  * @param obj
@@ -121,16 +121,16 @@ function es6Unique(arr) {
  function softBind(obj) {
    if (!Function.prototype.softBind) {
      Function.prototype.softBind = function (obj) {
-       var fn = this;
-       var curried = [].slice.call(arguments, 1);
+       var fn = this
+       var curried = [].slice.call(arguments, 1)
        var bound = function() {
          return fn.apply(
            (!this || this === (window || global)) ? obj : this,
            curried.concat.apply(curried, arguments)
-         );
-       };
-       bound.prototype = Object.create(fn.prototype);
-       return bound;
+         )
+       }
+       bound.prototype = Object.create(fn.prototype)
+       return bound
      }
    }
  }
@@ -141,15 +141,15 @@ function es6Unique(arr) {
  */
 if (!String.prototype.findFirst) {
   String.prototype.findFirst = function () {
-    var arr = Array.from(this), i = 0;
-    var newarr = arr.slice(0);
-    newarr.splice(0, 1);
+    var arr = Array.from(this), i = 0
+    var newarr = arr.slice(0)
+    newarr.splice(0, 1)
     while (newarr.includes(arr[i])) {
-      newarr.splice(i, 0, arr[i]);
-      i++;
-      newarr.splice(i, 1);
+      newarr.splice(i, 0, arr[i])
+      i++
+      newarr.splice(i, 1)
     }
-    return arr[i];
+    return arr[i]
   }
 }
 /**
@@ -167,27 +167,27 @@ const defaults = {
   decimals: 2,
   factor: 1024,
   unti: 'GB'
-};
-const unit = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
-function round(f, opts, i = 0) {
-  const {factor, decimals} = opts;
-  const value = f / factor;
-  const index = unit.findIndex(n => n === (opts.unti || 'GB'));
-  if (!~index) {
-    throw new Error('unti Error');
-  }
-  i++;
-  if (f % factor === f || i === -~index) {
-    const dec = 10 ** decimals;
-    const preValue = Math.floor(f * dec) / dec;
-    return `${preValue} ${unit[i - 1]}`;
-  }
-  return round(value, opts, i);
 }
-export function byte2any(b, opts) {
-  if (!b) return 0;
-  const option = Object.assign({}, defaults, opts);
-  return round(b, option);
+const unit = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']
+function round(f, opts, i = 0) {
+  const {factor, decimals} = opts
+  const value = f / factor
+  const index = unit.findIndex(n => n === (opts.unti || 'GB'))
+  if (!~index) {
+    throw new Error('unti Error')
+  }
+  i++
+  if (f % factor === f || i === -~index) {
+    const dec = 10 ** decimals
+    const preValue = Math.floor(f * dec) / dec
+    return `${preValue} ${unit[i - 1]}`
+  }
+  return round(value, opts, i)
+}
+function byte2any(b, opts) {
+  if (!b) return 0
+  const option = Object.assign({}, defaults, opts)
+  return round(b, option)
 }
 /**
  * @description Promise polyfill
@@ -277,13 +277,79 @@ Promise.prototype.then = function (onResolved, onRejected) {
 }
 Promise.prototype.catch = function(onRejected) {
   return this.then(null, onRejected)
+
+/**
+ * @description 函数防抖
+ * @param
+ *  fn,
+ *  delay
+ * @return
+ */
+function debounce(fn, delay = 160) {
+  let timer
+  return function (...args) {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+    }, delay)
+  }
+}
+/**
+ * @description 函数节流
+ * @param
+ *  fn,
+ *  delay
+ * @return
+ */
+function throttle(fn, delay = 160) {
+  let timer
+  let start = +new Date()
+  return function (...args) {
+    const cur = +new Date()
+    clearTimeout(timer)
+    if (cur - start >= delay) {
+      fn.apply(this, args)
+      start = cur
+    } else {
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+      }, delay)
+    }
+  }
+}
+/**
+ * @description 合并两个排序数组
+ * @param
+ * @return
+ */
+function mergeSort(a, b) {
+  var result = [], il = 0, ir = 0
+  var al = a.length, bl = b.length
+  
+  while (il < al && ir < bl) {
+    if (a[il] < b[ir]) {
+      result.push(a[il++])
+    } else {
+      result.push(b[ir++])
+    }
+  }
+  while (a[il]) {
+    result.push(a[il++])
+  }
+  while (b[ir]) {
+    result.push(b[ir++])
+  }
+  return result
 }
 const utils = {
-  parseUrlQuery: parseUrlQuery,
-  serializeObject: serializeObject,
-  quicksort: quicksort,
-  myEvent: myEvent,
-  softBind: softBind,
-  byte2any: byte2any
+  parseUrlQuery,
+  serializeObject,
+  quicksort,
+  myEvent,
+  softBind,
+  byte2any,
+  throttle,
+  debounce,
+  Promise
 }
-export default utils;
+export default utils
