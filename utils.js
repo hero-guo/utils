@@ -341,7 +341,16 @@ function mergeSort(a, b) {
   }
   return result
 }
+/**
+ * @description 展开数组
+ * @param arr
+ * @return
+ */
+function flat(arr) {
+  return arr.reduce((acc, cur) => Array.isArray(cur) ? acc.concat(flat(cur)) : acc.concat(cur), [])  
+}
 const utils = {
+  flat,
   parseUrlQuery,
   serializeObject,
   quicksort,
