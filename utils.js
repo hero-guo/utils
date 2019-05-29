@@ -349,7 +349,24 @@ function mergeSort(a, b) {
 function flat(arr) {
   return arr.reduce((acc, cur) => Array.isArray(cur) ? acc.concat(flat(cur)) : acc.concat(cur), [])  
 }
+/**
+ * @description 洗牌算法
+ * @param arr
+ * @return
+ */
+function shuffle(arr) {
+  let len = arr.length
+  const result = []
+  while(len) {
+    const index = Math.floor(Math.random() * len)
+    const val = arr.splice(index, 1)[0]
+    result.push(val)
+    len--
+  }
+  return result
+}
 const utils = {
+  shuffle，
   flat,
   parseUrlQuery,
   serializeObject,
