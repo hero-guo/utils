@@ -365,7 +365,16 @@ function shuffle(arr) {
   }
   return result
 }
+/**
+ * @description 随机生成 Emoji
+ * @param arr
+ * @return
+ */
+function randomEmoji(num = 1) {
+  return Array.from({length: num},(v, i) => String.fromCodePoint(129300 + Math.floor(Math.random() * 20)))
+}  
 const utils = {
+  randomEmoji,
   shuffle，
   flat,
   parseUrlQuery,
