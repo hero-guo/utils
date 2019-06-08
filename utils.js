@@ -492,7 +492,25 @@ function shuffle(arr) {
  */
 function randomEmoji(num = 1) {
   return Array.from({length: num},(v, i) => String.fromCodePoint(129300 + Math.floor(Math.random() * 20)))
-}  
+}
+/**
+ * @description 数字千分位
+ * @param string
+ * @return
+ */
+function splitNum(num, opts = {}) {
+  let result = ''
+  if (typeof num !== 'number') {
+    throw new Error('num is not number')
+  }
+  if (Number.toLocaleString) {
+    result = num.toLocaleString(opts)
+  }
+  if (!result) {
+    result = num.toString().replace(/(?<!\.\d*)\B(?=(\d{3})+(?!\d))/g, ',')
+  }
+  return result
+}
 const utils = {
   randomEmoji,
   shuffle，
